@@ -42,11 +42,31 @@ export function App() {
     setSelectedItem(item);
   }
 
+  function findInstruction() {
+    if (selectedCategory == null && selectedRestaurant == null) {
+      return appInfo.instructions.start;
+    } else if (selectedCategory != null && selectedRestaurant == null) {
+      return appInfo.instructions.onlyCategory;
+    } else if (selectedCategory == null && selectedRestaurant != null) {
+      return appInfo.instructions.onlyRestaurant;
+    } else if (selectedCategory != null && selectedRestaurant != null && selectedItem == null) {
+      return appInfo.instructions.noSelectedItem;
+    } else {
+      return appInfo.instructions.allSelected;
+    }
+  }
+
+  function selectedItemCheck(part) {
+    if (selectedItem == null) return null;
+    else if(part == "") return selectedItem;
+    else return selectedItem[part];
+  }
+
   var currentMenuItems = data.filter((rest) => {
     return (rest.food_category == selectedCategory && rest.restaurant == selectedRestaurant);
   })
 
-  console.log(currentMenuItems)
+  console.log(data);
 
   return (
     <main className="App">
@@ -80,7 +100,7 @@ export function App() {
         </div>
 
         {/* INSTRUCTIONS GO HERE */}
-        <Instructions instructions={appInfo.instructions}/>
+        <Instructions instructions={findInstruction()}/>
 
         {/* MENU DISPLAY */}
         <div className="MenuDisplay display">
@@ -95,7 +115,7 @@ export function App() {
           </div>
 
           {/* NUTRITION FACTS */}
-          <div className="NutritionFacts nutrition-facts">{ <NutritionalLabel nutritional-label={selectedItem}/> }</div>
+          <div className="NutritionFacts nutrition-facts">{ <NutritionalLabel nutritional-label={selectedItemCheck("")} item-name={selectedItemCheck("item_name")} fact-list={selectedItemCheck("")} /> }</div>
         </div>
 
         <div className="data-sources">
